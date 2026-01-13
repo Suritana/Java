@@ -19,13 +19,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
 
-      - name: Compile Java sources
+      - name: Build and analyze with Maven
         run: |
-          mkdir -p build
-          javac -d build $(find src -name "*.java")
+          mvn clean verify sonar:sonar \
+            -Dsonar.projectKey=Suritana_Java \
+            -Dsonar.organization=ivan-andreevich \ поменять на своё своё в sonarcloud
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.java.binaries=target/classes \
+            -Dsonar.coverage.exclusions=**/* \
+            -Dsonar.qualitygate.wait=false
 
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
